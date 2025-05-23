@@ -60,6 +60,7 @@ export type Mutation = {
   createCategory: Scalars['ID']['output'];
   createTag: Scalars['ID']['output'];
   deleteAd: Scalars['ID']['output'];
+  resetAndSeed?: Maybe<Scalars['ID']['output']>;
   updateAd: Scalars['ID']['output'];
 };
 
@@ -113,6 +114,11 @@ export type TagInput = {
   title: Scalars['String']['input'];
 };
 
+export type GetAllAds2QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllAds2Query = { __typename?: 'Query', getAllAds: Array<{ __typename?: 'Ad', id: number, title: string, price: number, picture: string }> };
+
 export type GetAllAdsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -157,6 +163,48 @@ export type CreateCategoryMutationVariables = Exact<{
 export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: string };
 
 
+export const GetAllAds2Document = gql`
+    query GetAllAds2 {
+  getAllAds {
+    id
+    title
+    price
+    picture
+  }
+}
+    `;
+
+/**
+ * __useGetAllAds2Query__
+ *
+ * To run a query within a React component, call `useGetAllAds2Query` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAds2Query` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAds2Query({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllAds2Query(baseOptions?: Apollo.QueryHookOptions<GetAllAds2Query, GetAllAds2QueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllAds2Query, GetAllAds2QueryVariables>(GetAllAds2Document, options);
+      }
+export function useGetAllAds2LazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllAds2Query, GetAllAds2QueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllAds2Query, GetAllAds2QueryVariables>(GetAllAds2Document, options);
+        }
+export function useGetAllAds2SuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllAds2Query, GetAllAds2QueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllAds2Query, GetAllAds2QueryVariables>(GetAllAds2Document, options);
+        }
+export type GetAllAds2QueryHookResult = ReturnType<typeof useGetAllAds2Query>;
+export type GetAllAds2LazyQueryHookResult = ReturnType<typeof useGetAllAds2LazyQuery>;
+export type GetAllAds2SuspenseQueryHookResult = ReturnType<typeof useGetAllAds2SuspenseQuery>;
+export type GetAllAds2QueryResult = Apollo.QueryResult<GetAllAds2Query, GetAllAds2QueryVariables>;
 export const GetAllAdsDocument = gql`
     query GetAllAds {
   getAllAds {
