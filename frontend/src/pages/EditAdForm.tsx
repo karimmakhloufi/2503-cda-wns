@@ -1,10 +1,11 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
   useCreateAdMutation,
   useGetAdQuery,
   useGetAllCategoriesAndTagsQuery,
 } from "../generated/graphql-types";
+import { toast } from "react-toastify";
 
 type Inputs = {
   title: string;
@@ -19,6 +20,7 @@ type Inputs = {
 
 const EditAdForm = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const {
     data: dataCatsAndTags,
     loading: loadCatsAndTags,
@@ -36,11 +38,20 @@ const EditAdForm = () => {
   const { register, handleSubmit } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const newData = {
-      ...data,
-      category: `${data.category}`,
-    };
-    createAd({ variables: { data: newData } });
+    try {
+      const newData = {
+        ...data,
+        category: `${data.category}`,
+      };
+      const { data: newAdData } = await createAd({
+        variables: { data: newData },
+      });
+      // const result = await createAd({ variables: { data: newData } });
+      // const newAdData = result.data;
+      navigate(`/ads/${newAdData?.createAd}`, { replace: true });
+    } catch {
+      toast.error("Une error !");
+    }
   };
 
   if (errAd || errCatsAndTags) return <p>Woops, we broke something</p>;

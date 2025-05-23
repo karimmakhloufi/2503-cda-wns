@@ -1,12 +1,21 @@
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import { useDeleteAdMutation, useGetAdQuery } from "../generated/graphql-types";
+import { GET_ALL_ADS } from "../graphql/operations";
 
 const AdDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [deleteAd] = useDeleteAdMutation();
+  // using the awaitRefetchQueries makes sure the refetch queries BEFORE considering the mutation done
+  const [deleteAd] = useDeleteAdMutation({
+    awaitRefetchQueries: true,
+    refetchQueries: [
+      {
+        query: GET_ALL_ADS,
+      },
+    ],
+  });
 
   const { data, loading, error } = useGetAdQuery({
     variables: { getAdId: Number(id) },

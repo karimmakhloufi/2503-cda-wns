@@ -11,10 +11,10 @@ const Header = () => {
     <header className="header">
       <div className="main-menu">
         <h1>
-          <a href="/" className="button logo link-button">
+          <Link to="/" className="button logo link-button">
             <span className="mobile-short-label">TGC</span>
             <span className="desktop-long-label">THE GOOD CORNER</span>
-          </a>
+          </Link>
         </h1>
         <form
           onSubmit={(e) => {
@@ -49,10 +49,10 @@ const Header = () => {
             </svg>
           </button>
         </form>
-        <a href="/ads/new" className="button link-button">
+        <Link to="/ads/new" className="button link-button">
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
-        </a>
+        </Link>
       </div>
       <nav className="categories-navigation">
         {data?.getAllCategories.map((el) => (

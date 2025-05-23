@@ -4,17 +4,45 @@ import {
   useCreateAdMutation,
   useGetAllCategoriesAndTagsQuery,
 } from "../generated/graphql-types";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
+import { GET_ALL_ADS } from "../graphql/operations";
 
 const NewAdForm = () => {
+  const navigate = useNavigate();
+
+  // bellow is a way to ask apollo to refetch somes queries
+  /*   const client = useApolloClient();
+  await client.refetchQueries({
+    include: [GET_ALL_ADS],
+  }); */
+
   const { error, loading, data } = useGetAllCategoriesAndTagsQuery();
-  const [createAd] = useCreateAdMutation();
+
+  // useing the refetch queries here, if the mutation succeed, the GET_ALL_ADS will be re-executed
+  const [createAd] = useCreateAdMutation({
+    refetchQueries: [
+      {
+        query: GET_ALL_ADS,
+      },
+    ],
+  });
   const { register, handleSubmit } = useForm<AdInput>();
 
   const onSubmit: SubmitHandler<AdInput> = async (data) => {
-    const sanitizedData = { ...data, price: Number(data.price) };
-    await createAd({
-      variables: { data: sanitizedData },
-    });
+    try {
+      const sanitizedData = { ...data, price: Number(data.price) };
+
+      const { data: newAdData } = await createAd({
+        variables: { data: sanitizedData },
+      });
+      // bellow the version without the destructuration / alias
+      // const result = await createAd({ variables: { data: newData } });
+      // const newAdData = result.data;
+      navigate(`/ads/${newAdData?.createAd}`, { replace: true });
+    } catch {
+      toast.error("Une error !");
+    }
   };
 
   if (loading) return <p>Wait for it...</p>;
