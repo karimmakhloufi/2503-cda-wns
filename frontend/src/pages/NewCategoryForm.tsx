@@ -6,7 +6,11 @@ type Inputs = {
 };
 
 const NewCategoryForm = () => {
-  const { register, handleSubmit } = useForm<Inputs>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await axios.post("http://backend:3000/categories", data);
@@ -20,8 +24,12 @@ const NewCategoryForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <label>
         Titre
-        <input {...register("title", { required: true })} />
+        <input {...register("title", { required: true, minLength: 3 })} />
       </label>
+      {errors.title?.type === "minLength" && (
+        <p role="alert">Category must have at least 3 characters</p>
+      )}
+
       <input type="submit" />
     </form>
   );
